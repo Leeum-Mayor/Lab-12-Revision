@@ -11,9 +11,16 @@ from PyQt6.QtGui import QPixmap
 
 
 class Ui_MainWindow(object):
+    """
+    Class representing the applications user interface
+    """
     def setupUi(self, MainWindow):
+        """
+        Loads user interface
+        :param MainWindow: Main window
+        """
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1132, 735)
+        MainWindow.setFixedSize(1135, 735)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -181,6 +188,10 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
+        """
+        Sets the text within the user interface
+        :param MainWindow: Main window
+        """
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Television"))
         self.volIncButton.setText(_translate("MainWindow", "+"))

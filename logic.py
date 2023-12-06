@@ -2,13 +2,20 @@ from PyQt6.QtWidgets import *
 from gui import *
 
 
-class Logic(QMainWindow, Ui_MainWindow):
+class Television(QMainWindow, Ui_MainWindow):
+    """
+    Handles the logic for a television object
+    """
     MIN_VOLUME = 0
     MAX_VOLUME = 2
     MIN_CHANNEL = 0
     MAX_CHANNEL = 9
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Assigns channel and volume values, as well as the status of the mute and power toggle by either
+        reading from data file or creates a new file and assigns default values.
+        """
         super().__init__()
         self.setupUi(self)
 
@@ -34,7 +41,7 @@ class Logic(QMainWindow, Ui_MainWindow):
         else:
             self.teleScreen.setPixmap(QPixmap(f'images/PowerOffPic.png'))
 
-        if self.__muted == False and self.__volume > 0:
+        if self.__muted == False and self.__volume > 0 and self.__status == True:
             self.volumeStatus.setPixmap(QPixmap(f'images/vol{self.__volume}.png'))
 
         self.telePowerButton.clicked.connect(lambda: self.power())
@@ -57,7 +64,10 @@ class Logic(QMainWindow, Ui_MainWindow):
         self.chNineButton.clicked.connect(lambda: self.change_channel(9))
         self.chZeroButton.clicked.connect(lambda: self.change_channel(0))
 
-    def power(self):
+    def power(self) -> None:
+        """
+        Toggles power status
+        """
         if self.__status == True:
             self.teleScreen.setPixmap(QPixmap('images/PowerOffPic.png'))
             self.volumeStatus.setPixmap(QPixmap('null'))
@@ -67,7 +77,10 @@ class Logic(QMainWindow, Ui_MainWindow):
             self.volumeStatus.setPixmap(QPixmap(f'images/vol{self.__volume}'))
             self.__status = True
 
-    def mute(self):
+    def mute(self) -> None:
+        """
+        Toggles mute status
+        """
         if self.__status == True:
             if self.__muted == True:
                 self.volumeStatus.setPixmap(QPixmap(f'images/vol{self.__volume}.png'))
@@ -76,7 +89,12 @@ class Logic(QMainWindow, Ui_MainWindow):
                 self.volumeStatus.setPixmap(QPixmap('null'))
                 self.__muted = True
 
-    def change_channel(self, value):
+    def change_channel(self, value: int) -> None:
+        """
+        Changes channel up, down, or jumps to channel
+        :param value: Indicates how to change channel, -1 goes down, -2 goes up, any other value
+        changes the channel to said value
+        """
         if self.__status == True:
             if value == -1:
                 if self.__channel > self.MIN_CHANNEL:
@@ -93,14 +111,20 @@ class Logic(QMainWindow, Ui_MainWindow):
 
             self.teleScreen.setPixmap(QPixmap(f'images/ch{self.__channel}Pic.png'))
 
-    def volume_up(self):
+    def volume_up(self) -> None:
+        """
+        Turns volume up
+        """
         if self.__status == True:
             self.__muted = False
             if self.__volume < self.MAX_VOLUME:
                 self.__volume += 1
             self.volumeStatus.setPixmap(QPixmap(f'images/vol{self.__volume}.png'))
 
-    def volume_down(self):
+    def volume_down(self) -> None:
+        """
+        Turns volume down
+        """
         if self.__status == True:
             self.__muted = False
             if self.__volume > self.MIN_VOLUME:
@@ -109,7 +133,10 @@ class Logic(QMainWindow, Ui_MainWindow):
             else:
                 self.volumeStatus.setPixmap(QPixmap('null'))
 
-    def closeEvent(self, event: object) -> object:
+    def closeEvent(self, event: object) -> None:
+        """
+        Saves data to a file when window is closed
+        """
         output_file = open('data.txt', 'w')
         if self.__status == False:
             output_file.write('\n')
@@ -123,4 +150,3 @@ class Logic(QMainWindow, Ui_MainWindow):
         output_file.write(f'{str(self.__volume)}\n')
         output_file.write(f'{str(self.__channel)}\n')
         output_file.close()
-        event.accept()
